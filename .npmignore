@@ -1,0 +1,8 @@
+# Exclude TypeScript sources and tests
+rules/**/*.ts
+tests/
+*.ts
+TODO.md
+
+# Keep the compiled output
+!dist/**

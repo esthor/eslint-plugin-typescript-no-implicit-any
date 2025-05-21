@@ -15,8 +15,12 @@ ruleTester.run('no-implicit-any-params', rule, {
     // Plain typed parameter should pass
     'function typed(a: string) {}',
 
+    // Multiple annotated parameters
+    'function typedMany(a: number, b: string) {}',
+
     // Default parameters that include a type are allowed
     'function defaultTyped(a: number = 1) {}',
+    'const typedDefault = function(a: number = 1) {};',
 
     // Parameter properties with explicit type annotations are valid
     'class A { constructor(private p: string) {} }',
@@ -25,7 +29,7 @@ ruleTester.run('no-implicit-any-params', rule, {
     'class A { constructor(private p: string = "foo") {} }',
 
     // Destructured parameters require a type on the pattern
-    'function destructured({a}: {a: string}) {}',
+    'function destructured({a}: { a: string }) {}',
 
     // Typed rest parameters are fine
     'function rest(...args: number[]) {}',
@@ -77,6 +81,16 @@ ruleTester.run('no-implicit-any-params', rule, {
       // Destructured array parameter without a type
       code: 'function destructuredArray([a]) {}',
       output: 'function destructuredArray([a]: any) {}',
+      errors: [{ messageId: 'noImplicitAnyRequired' }],
+    },
+    {
+      code: 'const expr = function(b) {}',
+      output: 'const expr = function(b: any) {}',
+      errors: [{ messageId: 'noImplicitAnyRequired' }],
+    },
+    {
+      code: 'function multipleUntyped(a, b: string) {}',
+      output: 'function multipleUntyped(a: any, b: string) {}',
       errors: [{ messageId: 'noImplicitAnyRequired' }],
     },
   ],
