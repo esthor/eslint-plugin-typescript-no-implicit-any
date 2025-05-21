@@ -2,6 +2,7 @@
   "name": "eslint-plugin-typescript-no-implicit-any",
   "version": "0.0.1",
   "main": "dist/index.js",
+  "module": "dist/index.js",
   "dependencies": {
     "@types/jest": "^28.1.4",
     "@typescript-eslint/eslint-plugin": "^5.30.5",
