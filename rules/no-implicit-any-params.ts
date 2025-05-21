@@ -66,10 +66,11 @@ export default createRule({
         }
 
         if (annotationNode !== undefined && !annotationNode.typeAnnotation) {
+          report(annotationNode, getNodeName(param));
           const tsNode = parserServices.esTreeNodeToTSNodeMap.get(param);
           const paramType = checker.getTypeAtLocation(tsNode);
           if (isAny(paramType)) {
-            report(param, annotationNode, getNodeName(param));
+              report(param, annotationNode, getNodeName(param));
           }
         }
       }
