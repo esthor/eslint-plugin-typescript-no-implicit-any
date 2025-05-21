@@ -13,6 +13,7 @@ ruleTester.run('no-implicit-any-params', rule, {
     {
       code: 'function untyped(a) {}',
       errors: [{ messageId: 'noImplicitAnyRequired' }],
+      output: 'function untyped(a: any) {}',
     },
   ],
 });

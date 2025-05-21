@@ -3,6 +3,7 @@ import {
   ESLintUtils,
   TSESTree,
 } from "@typescript-eslint/utils";
+import * as ts from "typescript";
 
 export const RULE_NAME = "no-implicit-any-params";
 export type MessageIds = "noImplicitAnyRequired" | "else";
@@ -12,16 +13,24 @@ const createRule = ESLintUtils.RuleCreator((name) => RULE_NAME);
 
 export default createRule({
   create: (context) => {
+    const parserServices = ESLintUtils.getParserServices(context);
+    const checker = parserServices.program.getTypeChecker();
+
+    function isAny(type: ts.Type): boolean {
+      return (type.flags & ts.TypeFlags.Any) !== 0;
+    }
     // Totally gonna snatch these nice helpers from the `typedef` typescript-eslint rule: https://github.com/typescript-eslint/typescript-eslint/blob/dc58ff5da99989510fdbbe5575a31acd320b1808/packages/eslint-plugin/src/rules/typedef.ts
     // TODO: Add more of those helpers, especially for ancestors; big issue is not to just warn on ALL instances of lacking explicit typedefs (I.e., we want to ONLY report if a type could not be inferred by TS, so it is truly an implicit any according to TS.)
-    function report(location: TSESTree.Node, name?: string): void {
+    function report(
+      param: TSESTree.Node,
+      insertTarget: TSESTree.Node,
+      name?: string
+    ): void {
       context.report({
-        node: location,
+        node: param,
         messageId: "noImplicitAnyRequired",
         data: { name },
-        fix: (fixer) => {
-          return location ? fixer.insertTextAfter(location, ": any") : null;
-        },
+        fix: (fixer) => fixer.insertTextAfter(insertTarget, ": any"),
       });
     }
 
@@ -57,7 +66,11 @@ export default createRule({
         }
 
         if (annotationNode !== undefined && !annotationNode.typeAnnotation) {
-          report(param, getNodeName(param));
+          const tsNode = parserServices.esTreeNodeToTSNodeMap.get(param);
+          const paramType = checker.getTypeAtLocation(tsNode);
+          if (isAny(paramType)) {
+            report(param, annotationNode, getNodeName(param));
+          }
         }
       }
     }
