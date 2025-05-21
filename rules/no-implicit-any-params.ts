@@ -57,7 +57,7 @@ export default createRule({
         }
 
         if (annotationNode !== undefined && !annotationNode.typeAnnotation) {
-          report(param, getNodeName(param));
+          report(annotationNode, getNodeName(param));
         }
       }
     }
