@@ -5,7 +5,7 @@ import {
 } from "@typescript-eslint/utils";
 
 export const RULE_NAME = "no-implicit-any-params";
-export type MessageIds = "noImplicitAnyRequired | else";
+export type MessageIds = "noImplicitAnyRequired" | "else";
 export type Options = [];
 
 const createRule = ESLintUtils.RuleCreator((name) => RULE_NAME);
