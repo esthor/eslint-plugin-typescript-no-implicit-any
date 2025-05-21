@@ -13,7 +13,7 @@ const createRule = ESLintUtils.RuleCreator((name) => RULE_NAME);
 export default createRule({
   create: (context) => {
     // Totally gonna snatch these nice helpers from the `typedef` typescript-eslint rule: https://github.com/typescript-eslint/typescript-eslint/blob/dc58ff5da99989510fdbbe5575a31acd320b1808/packages/eslint-plugin/src/rules/typedef.ts
-    // TODO: Add more of those helpers, especially for ancestors; big issue is not to just warn on ALL instances of lacking explicity typedefs (I.e., we want to ONLY report if a type could not be inferred by TS, so it is truly an implicit any according to TS.)
+    // TODO: Add more of those helpers, especially for ancestors; big issue is not to just warn on ALL instances of lacking explicit typedefs (I.e., we want to ONLY report if a type could not be inferred by TS, so it is truly an implicit any according to TS.)
     function report(location: TSESTree.Node, name?: string): void {
       context.report({
         node: location,
