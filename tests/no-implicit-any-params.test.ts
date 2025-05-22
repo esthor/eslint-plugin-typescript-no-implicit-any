@@ -39,6 +39,12 @@ ruleTester.run('no-implicit-any-params', rule, {
 
     // Even an explicit `any` counts as typed
     'function explicitAny(a: any) {}',
+
+    // Class method with typed parameter should pass
+    {
+      code: 'class B { typedMethod(a: number) {} }',
+      output: 'class B { typedMethod(a: number) {} }',
+    },
   ],
   invalid: [
     {
@@ -91,6 +97,13 @@ ruleTester.run('no-implicit-any-params', rule, {
     {
       code: 'function multipleUntyped(a, b: string) {}',
       output: 'function multipleUntyped(a: any, b: string) {}',
+      errors: [{ messageId: 'noImplicitAnyRequired' }],
+    },
+
+    // Class method with untyped parameter should fail
+    {
+      code: 'class B { untypedMethod(a) {} }',
+      output: 'class B { untypedMethod(a: any) {} }',
       errors: [{ messageId: 'noImplicitAnyRequired' }],
     },
   ],
